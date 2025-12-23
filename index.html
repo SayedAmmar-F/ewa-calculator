@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>حاسبة تكلفة الكهرباء - البحرين</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .result-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+
+    <h2 class="text-center mb-4">حاسبة تكلفة الكهرباء في البحرين</h2>
+
+    <!-- جدول أسعار الشرائح -->
+    <div class="mb-4">
+        <h5>جدول أسعار الوحدات</h5>
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>الشريحة</th>
+                    <th>عدد الوحدات</th>
+                    <th>السعر</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>الأولى</td>
+                    <td>حتى 5000 وحدة</td>
+                    <td>18 فلس (0.018 دينار)</td>
+                </tr>
+                <tr>
+                    <td>الثانية</td>
+                    <td>أكثر من 5000 وحدة</td>
+                    <td>32 فلس (0.032 دينار)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- الإدخال -->
+    <div class="result-box mb-4">
+        <div class="mb-3">
+            <label class="form-label">عدد وحدات الكهرباء المستهلكة</label>
+            <input type="number" id="units" class="form-control" placeholder="مثال: 6200">
+        </div>
+        <button class="btn btn-primary w-100" onclick="calculate()">احسب</button>
+    </div>
+
+    <!-- النتائج -->
+    <div id="results" class="result-box d-none">
+
+        <h5 class="mb-3">تفاصيل الحساب</h5>
+
+        <p>إجمالي التكلفة قبل الدعم: <span class="highlight" id="totalCost"></span> دينار</p>
+        <p>قيمة الدعم الحكومي: <span class="highlight">70</span> دينار</p>
+        <p>المبلغ بعد الدعم: <span class="highlight" id="finalCost"></span> دينار</p>
+        <p id="differenceText"></p>
+
+        <!-- جدول العملية الحسابية -->
+        <h5 class="mt-4">تفصيل العملية الحسابية</h5>
+        <table class="table table-bordered text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th>الوصف</th>
+                    <th>القيمة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>وحدات الشريحة الأولى</td>
+                    <td id="tier1Units"></td>
+                </tr>
+                <tr>
+                    <td>تكلفة الشريحة الأولى</td>
+                    <td id="tier1Cost"></td>
+                </tr>
+                <tr>
+                    <td>وحدات الشريحة الثانية</td>
+                    <td id="tier2Units"></td>
+                </tr>
+                <tr>
+                    <td>تكلفة الشريحة الثانية</td>
+                    <td id="tier2Cost"></td>
+                </tr>
+                <tr class="table-success">
+                    <td>الإجمالي قبل الدعم</td>
+                    <td id="sumCost"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+function calculate() {
+    const units = parseFloat(document.getElementById("units").value);
+    if (isNaN(units) || units < 0) {
+        alert("يرجى إدخال عدد وحدات صحيح");
+        return;
+    }
+
+    const tier1Rate = 0.018;
+    const tier2Rate = 0.032;
+    const support = 70;
+
+    let tier1Units = Math.min(units, 5000);
+    let tier2Units = Math.max(units - 5000, 0);
+
+    let tier1Cost = tier1Units * tier1Rate;
+    let tier2Cost = tier2Units * tier2Rate;
+
+    let totalCost = tier1Cost + tier2Cost;
+    let finalCost = totalCost - support;
+
+    document.getElementById("results").classList.remove("d-none");
+
+    document.getElementById("totalCost").textContent = totalCost.toFixed(3);
+    document.getElementById("finalCost").textContent = finalCost.toFixed(3);
+
+    document.getElementById("tier1Units").textContent = tier1Units;
+    document.getElementById("tier1Cost").textContent = tier1Cost.toFixed(3) + " دينار";
+    document.getElementById("tier2Units").textContent = tier2Units;
+    document.getElementById("tier2Cost").textContent = tier2Cost.toFixed(3) + " دينار";
+    document.getElementById("sumCost").textContent = totalCost.toFixed(3) + " دينار";
+
+    let differenceText = "";
+    if (finalCost > 0) {
+        differenceText = `المبلغ الواجب دفعه بعد الدعم هو <span class="highlight">${finalCost.toFixed(3)}</span> دينار`;
+    } else {
+        differenceText = `الدعم يغطي الاستهلاك بالكامل ويتبقى <span class="highlight">${Math.abs(finalCost).toFixed(3)}</span> دينار`;
+    }
+
+    document.getElementById("differenceText").innerHTML = differenceText;
+}
+</script>
+
+</body>
+</html>
