@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>حاسبة تكلفة الكهرباء - البحرين</title>
 
     <!-- Bootstrap -->
@@ -9,111 +10,160 @@
 
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont;
         }
-        .result-box {
-            background: #fff;
+
+        h2, h5 {
+            color: #ffffff;
+        }
+
+        .card-dark {
+            background-color: #1e1e1e;
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
+
+        .form-control {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #444;
+            font-size: 1.1rem;
+        }
+
+        .form-control:focus {
+            background-color: #2a2a2a;
+            color: #fff;
+            border-color: #0d6efd;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            font-size: 1.2rem;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        table {
+            color: #e0e0e0;
+            min-width: 500px;
+        }
+
+        .table-dark th {
+            background-color: #0d6efd;
+        }
+
+        .table-bordered td, 
+        .table-bordered th {
+            border-color: #444;
+        }
+
         .highlight {
+            color: #4dabf7;
             font-weight: bold;
-            color: #0d6efd;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 576px) {
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container my-5">
+<div class="container my-4">
 
     <h2 class="text-center mb-4">حاسبة تكلفة الكهرباء في البحرين</h2>
 
-    <!-- جدول أسعار الشرائح -->
-    <div class="mb-4">
-        <h5>جدول أسعار الوحدات</h5>
-        <table class="table table-bordered text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>الشريحة</th>
-                    <th>عدد الوحدات</th>
-                    <th>السعر</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>الأولى</td>
-                    <td>حتى 5000 وحدة</td>
-                    <td>18 فلس (0.018 دينار)</td>
-                </tr>
-                <tr>
-                    <td>الثانية</td>
-                    <td>أكثر من 5000 وحدة</td>
-                    <td>32 فلس (0.032 دينار)</td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- جدول الأسعار -->
+    <div class="card-dark">
+        <h5 class="mb-3">أسعار شرائح الكهرباء</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>الشريحة</th>
+                        <th>الوحدات</th>
+                        <th>السعر</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الأولى</td>
+                        <td>حتى 5000</td>
+                        <td>18 فلس (0.018 د.ب)</td>
+                    </tr>
+                    <tr>
+                        <td>الثانية</td>
+                        <td>أكثر من 5000</td>
+                        <td>32 فلس (0.032 د.ب)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- الإدخال -->
-    <div class="result-box mb-4">
-        <div class="mb-3">
-            <label class="form-label">عدد وحدات الكهرباء المستهلكة</label>
-            <input type="number" id="units" class="form-control" placeholder="مثال: 6200">
-        </div>
-        <button class="btn btn-primary w-100" onclick="calculate()">احسب</button>
+    <div class="card-dark">
+        <label class="form-label">عدد وحدات الاستهلاك</label>
+        <input type="number" id="units" class="form-control mb-3" placeholder="مثال: 6200">
+        <button class="btn btn-primary w-100" onclick="calculate()">احسب التكلفة</button>
     </div>
 
     <!-- النتائج -->
-    <div id="results" class="result-box d-none">
+    <div id="results" class="card-dark d-none">
 
-        <h5 class="mb-3">تفاصيل الحساب</h5>
+        <h5 class="mb-3">النتيجة النهائية</h5>
 
-        <p>إجمالي التكلفة قبل الدعم: <span class="highlight" id="totalCost"></span> دينار</p>
-        <p>قيمة الدعم الحكومي: <span class="highlight">70</span> دينار</p>
-        <p>المبلغ بعد الدعم: <span class="highlight" id="finalCost"></span> دينار</p>
+        <p>إجمالي التكلفة قبل الدعم: <span class="highlight" id="totalCost"></span> د.ب</p>
+        <p>الدعم الحكومي: <span class="highlight">70</span> د.ب</p>
+        <p>المبلغ بعد الدعم: <span class="highlight" id="finalCost"></span> د.ب</p>
         <p id="differenceText"></p>
 
-        <!-- جدول العملية الحسابية -->
-        <h5 class="mt-4">تفصيل العملية الحسابية</h5>
-        <table class="table table-bordered text-center">
-            <thead class="table-secondary">
-                <tr>
-                    <th>الوصف</th>
-                    <th>القيمة</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>وحدات الشريحة الأولى</td>
-                    <td id="tier1Units"></td>
-                </tr>
-                <tr>
-                    <td>تكلفة الشريحة الأولى</td>
-                    <td id="tier1Cost"></td>
-                </tr>
-                <tr>
-                    <td>وحدات الشريحة الثانية</td>
-                    <td id="tier2Units"></td>
-                </tr>
-                <tr>
-                    <td>تكلفة الشريحة الثانية</td>
-                    <td id="tier2Cost"></td>
-                </tr>
-                <tr class="table-success">
-                    <td>الإجمالي قبل الدعم</td>
-                    <td id="sumCost"></td>
-                </tr>
-            </tbody>
-        </table>
+        <h5 class="mt-4">تفصيل الحساب</h5>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <tbody>
+                    <tr>
+                        <td>وحدات الشريحة الأولى</td>
+                        <td id="tier1Units"></td>
+                    </tr>
+                    <tr>
+                        <td>تكلفة الشريحة الأولى</td>
+                        <td id="tier1Cost"></td>
+                    </tr>
+                    <tr>
+                        <td>وحدات الشريحة الثانية</td>
+                        <td id="tier2Units"></td>
+                    </tr>
+                    <tr>
+                        <td>تكلفة الشريحة الثانية</td>
+                        <td id="tier2Cost"></td>
+                    </tr>
+                    <tr class="table-success text-dark">
+                        <td>الإجمالي</td>
+                        <td id="sumCost"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
 </div>
 
 <script>
 function calculate() {
-    const units = parseFloat(document.getElementById("units").value);
-    if (isNaN(units) || units < 0) {
+    const units = Number(document.getElementById("units").value);
+    if (!units || units < 0) {
         alert("يرجى إدخال عدد وحدات صحيح");
         return;
     }
@@ -122,14 +172,14 @@ function calculate() {
     const tier2Rate = 0.032;
     const support = 70;
 
-    let tier1Units = Math.min(units, 5000);
-    let tier2Units = Math.max(units - 5000, 0);
+    const tier1Units = Math.min(units, 5000);
+    const tier2Units = Math.max(units - 5000, 0);
 
-    let tier1Cost = tier1Units * tier1Rate;
-    let tier2Cost = tier2Units * tier2Rate;
+    const tier1Cost = tier1Units * tier1Rate;
+    const tier2Cost = tier2Units * tier2Rate;
 
-    let totalCost = tier1Cost + tier2Cost;
-    let finalCost = totalCost - support;
+    const totalCost = tier1Cost + tier2Cost;
+    const finalCost = totalCost - support;
 
     document.getElementById("results").classList.remove("d-none");
 
@@ -137,19 +187,15 @@ function calculate() {
     document.getElementById("finalCost").textContent = finalCost.toFixed(3);
 
     document.getElementById("tier1Units").textContent = tier1Units;
-    document.getElementById("tier1Cost").textContent = tier1Cost.toFixed(3) + " دينار";
+    document.getElementById("tier1Cost").textContent = tier1Cost.toFixed(3) + " د.ب";
     document.getElementById("tier2Units").textContent = tier2Units;
-    document.getElementById("tier2Cost").textContent = tier2Cost.toFixed(3) + " دينار";
-    document.getElementById("sumCost").textContent = totalCost.toFixed(3) + " دينار";
+    document.getElementById("tier2Cost").textContent = tier2Cost.toFixed(3) + " د.ب";
+    document.getElementById("sumCost").textContent = totalCost.toFixed(3) + " د.ب";
 
-    let differenceText = "";
-    if (finalCost > 0) {
-        differenceText = `المبلغ الواجب دفعه بعد الدعم هو <span class="highlight">${finalCost.toFixed(3)}</span> دينار`;
-    } else {
-        differenceText = `الدعم يغطي الاستهلاك بالكامل ويتبقى <span class="highlight">${Math.abs(finalCost).toFixed(3)}</span> دينار`;
-    }
-
-    document.getElementById("differenceText").innerHTML = differenceText;
+    document.getElementById("differenceText").innerHTML =
+        finalCost > 0
+        ? `المبلغ الواجب دفعه: <span class="highlight">${finalCost.toFixed(3)}</span> د.ب`
+        : `الدعم يغطي الاستهلاك ويتبقى <span class="highlight">${Math.abs(finalCost).toFixed(3)}</span> د.ب`;
 }
 </script>
 
